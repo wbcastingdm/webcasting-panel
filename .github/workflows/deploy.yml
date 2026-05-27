@@ -20,12 +20,12 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
 
-      - name: Deploy to Server
-        uses: appleboy/scp-action@master
+      - name: Copy dist via rsync
+        uses: burnett01/rsync-deployments@7.0.1
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "dist/"
-          target: "/opt/webcasting-panel/"
-          strip_components: 1
+          switches: -avz --delete
+          path: dist/
+          remote_path: /opt/webcasting-panel/
+          remote_host: ${{ secrets.SERVER_IP }}
+          remote_user: root
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
